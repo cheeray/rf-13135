@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	<ui:define name="content">
+		<h:messages />
+		<h:form id="greetForm">
+			<rich:extendedDataTable id="table" noDataLabel="&#160;&#160;No Data."
+				var="user" value="#{users}" rowKeyVar="row" frozenColumns="1"
+				selection="#{userController.selection}"
+				selectionMode="multipleKeyboardFree" onrowclick="clickRow(#{row});">
+				<a4j:ajax  event="selectionchange"
+					listener="#{userController.selectionListener}" render="selected"
+					limitRender="true" />
+				<rich:column width="20%" styleClass="id text-right">
+					<f:facet name="header">
+						<h:outputText value="#" styleClass="id" />
+					</f:facet>
+					<h:outputText value="#{user.id}" />
+				</rich:column>
+				<rich:column width="30%">
+					<f:facet name="header">
+						<h:outputText value="User Name" />
+					</f:facet>
+					<h:outputText value="#{user.userName}" />
+				</rich:column>
+				<rich:column width="25%">
+					<f:facet name="header">
+						<h:outputText value="First Name" />
+					</f:facet>
+					<h:outputText value="#{user.firstName}" />
+				</rich:column>
+				<rich:column width="25%">
+					<f:facet name="header">
+						<h:outputText value="Last Name" />
+					</f:facet>
+					<h:outputText value="#{user.lastName}" />
+				</rich:column>
+			</rich:extendedDataTable>
+
+			<a4j:jsFunction name="clickRow" render="@none" limitRender="true">
+				<a4j:param name="clickedRow" assignTo="#{userController.clickedRow}" />
+			</a4j:jsFunction>
+
+		</h:form>
+		<a4j:outputPanel id="selected">
+			<rich:panel header="Selected Users:"
+				rendered="#{not empty userController.selectedUsers}">
+				<rich:list type="unordered" value="#{userController.selectedUsers}"
+					var="sel">
+					<h:outputText
+						value="#{sel.userName} - #{sel.firstName} - #{sel.lastName}" />
+				</rich:list>
+			</rich:panel>
+		</a4j:outputPanel>
+	</ui:define>
+</ui:composition>
